@@ -15,7 +15,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,13 +27,16 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
@@ -42,7 +44,7 @@ android {
 
 dependencies {
 
-
+    // Compose & AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -55,6 +57,22 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.runtime)
+
+    // Room con KSP (correcto)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.rxjava2)
+    implementation(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.room.guava)
+    implementation(libs.androidx.room.paging)
+    testImplementation(libs.androidx.room.testing)
+
+    // ViewModel & LiveData
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata)
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,37 +80,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    val room_version = "2.8.3"
 
-    implementation(libs.androidx.room.runtime)
+    val nav_version = "2.9.5"
 
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-    // See Add the KSP plugin to your project
-    ksp(libs.androidx.room.room.compiler)
-
-    // If this project only uses Java source, use the Java annotationProcessor
-    // No additional plugins are necessary
-    annotationProcessor(libs.androidx.room.room.compiler)
-
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
-
-    // optional - RxJava2 support for Room
-    implementation(libs.androidx.room.rxjava2)
-
-    // optional - RxJava3 support for Room
-    implementation(libs.androidx.room.rxjava3)
-
-    // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation(libs.androidx.room.guava)
-
-    // optional - Test helpers
-    testImplementation(libs.androidx.room.testing)
-
-    // optional - Paging 3 Integration
-    implementation(libs.androidx.room.paging)
-
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
-    implementation(libs.androidx.lifecycle.livedata)
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 }
