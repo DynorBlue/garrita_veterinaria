@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     foreignKeys = [ForeignKey(
         entity = Cliente::class,
         parentColumns = ["idCliente"],
-        childColumns = ["clienteid"],
+        childColumns = ["clienteId"],
         onDelete = ForeignKey.Companion.CASCADE
     )], indices = [Index("clienteId")])
 data class Mascota(

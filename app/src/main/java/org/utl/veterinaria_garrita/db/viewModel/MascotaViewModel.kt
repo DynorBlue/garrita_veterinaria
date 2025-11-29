@@ -36,7 +36,7 @@ class MascotaViewModel (val repositorio: MascotaRepositorio): ViewModel(){
         peso: Double
     ) = viewModelScope.launch {
         _uiState.value = _uiState.value.copy(
-            isloading = true,
+            isLoading = true,
             mensaje = null,
             error = null
         )
@@ -51,39 +51,40 @@ class MascotaViewModel (val repositorio: MascotaRepositorio): ViewModel(){
             repositorio.insertarMascota(mascota)
 
             _uiState.value = _uiState.value.copy(
-                isloading = false,
+                isLoading = false,
                 mensaje = "mascota agregado correctamente",
                 error = null
             )
         }
         catch (e: Exception){
             _uiState.value = _uiState.value.copy(
-                isloading = false,
+                isLoading = false,
                 mensaje = null,
                 error = "no se pudo agregar a la mascota ${e.message}"
             )
         }
-        fun eliminarMascota(mascota: Mascota) = viewModelScope.launch {
-            repositorio.eliminarMascota(mascota)
-        }
 
-        fun actualizarMascota(mascota: Mascota) = viewModelScope.launch {
-            repositorio.actualizarMascota(mascota)
-        }
+    }
+    fun eliminarMascota(mascota: Mascota) = viewModelScope.launch {
+        repositorio.eliminarMascota(mascota)
+    }
 
-        fun limpiarMensaje(){
-            _uiState.value = _uiState.value.copy(
-                mensaje = null,
-                error = null
-            )
-        }
+    fun actualizarMascota(mascota: Mascota) = viewModelScope.launch {
+        repositorio.actualizarMascota(mascota)
+    }
+
+    fun limpiarMensaje(){
+        _uiState.value = _uiState.value.copy(
+            mensaje = null,
+            error = null
+        )
     }
 }
 
 
 
 data class MascotaUiState(
-    val isloading: Boolean= false,
+    val isLoading: Boolean= false,
     val mensaje: String? = null,
     val error: String?= null
 )

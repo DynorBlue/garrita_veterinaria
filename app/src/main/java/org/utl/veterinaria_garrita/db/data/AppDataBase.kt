@@ -19,7 +19,7 @@ import org.utl.veterinaria_garrita.db.model.Usuario
     version = 1,
     exportSchema = false
 )
-@TypeConverters(ConvertidorFecha::class)
+@TypeConverters(ConvertidorFecha::class, ConvertidorRol::class)
 abstract class AppDataBase : RoomDatabase(){
     abstract fun usuarioDao(): UsuarioDao
     abstract fun clienteDao(): ClienteDao

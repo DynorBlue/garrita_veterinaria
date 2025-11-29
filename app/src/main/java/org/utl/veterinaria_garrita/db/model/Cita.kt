@@ -3,6 +3,7 @@ package org.utl.veterinaria_garrita.db.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(
@@ -19,6 +20,7 @@ import java.util.Date
     )], indices = [Index("mascotaId"), Index("usuarioId")]
 )
 data class Cita(
+    @PrimaryKey(autoGenerate = true)
     val idCita: Long = 0,
     val fecha: Date,
     val mascotaId: Long,
