@@ -2,18 +2,18 @@ package org.utl.veterinaria_garrita.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Blanco = Color(0xFFFFFF)
+val Blanco = Color(0xFFFFFFFF)
 
-val AzulClaro = Color(0x00BCD4)
+val AzulClaro = Color(0xFF00BCD4)
 
-val AzulFuerte  = Color(0x1565C0)
+val AzulFuerte  = Color(0xFF1565C0)
 
-val Gris = Color(0x424242)
+val Gris = Color(0xFF424242)
 
-val RojoAlerta = Color(0xFF0000)
+val RojoAlerta = Color(0xFFFF0000)
 
-val VerdeAlerta = Color(0x00FF00)
+val VerdeAlerta = Color(0xFF00FF00)
 
-val Negro = Color(0x000000)
+val Negro = Color(0xFF000000)
 
-val BlancoHumo = Color(0xF5F5F5)
+val BlancoHumo = Color(0xFFF5F5F5)
