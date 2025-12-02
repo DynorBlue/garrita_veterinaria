@@ -60,6 +60,7 @@ dependencies {
 
     // Room con KSP (correcto)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.runtime)
     ksp(libs.androidx.room.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.rxjava2)

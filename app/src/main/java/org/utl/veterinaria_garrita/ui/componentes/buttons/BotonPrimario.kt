@@ -9,8 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.utl.veterinaria_garrita.ui.theme.AzulClaro
+import org.utl.veterinaria_garrita.ui.theme.AzulFuerte
 import org.utl.veterinaria_garrita.ui.theme.Blanco
 
 @Composable
@@ -24,9 +27,8 @@ fun BotonPrimario(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(16.dp),
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = AzulClaro,
             contentColor = Blanco
@@ -34,7 +36,11 @@ fun BotonPrimario(
     ) {
         Text(
             text = texto,
-            style = MaterialTheme.typography.labelLarge
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = Blanco,
+            modifier = Modifier.padding(2.dp),
+            style = MaterialTheme.typography.headlineMedium
         )
     }
 }
