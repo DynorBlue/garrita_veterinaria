@@ -20,30 +20,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
+import org.utl.veterinaria_garrita.db.data.AppDataBase
+import org.utl.veterinaria_garrita.db.repositorio.UsuarioRepositorio
+import org.utl.veterinaria_garrita.db.viewModel.UsuarioViewModel
+import org.utl.veterinaria_garrita.db.viewModel.UsuarioViewModelFactory
 import org.utl.veterinaria_garrita.R
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonPrimario
 import org.utl.veterinaria_garrita.ui.theme.AzulFuerte
 import org.utl.veterinaria_garrita.ui.theme.Blanco
 import org.utl.veterinaria_garrita.ui.theme.Gris
 import org.utl.veterinaria_garrita.ui.theme.Negro
+import org.utl.veterinaria_garrita.ui.theme.RojoAlerta
 
 @Composable
 fun InicioSesion(
     onLoginSuccess: () -> Unit = {}
 ) {
-//variables para los textfield
+    val context = LocalContext.current
+    val database = AppDataBase.getDataBase(context)
+    val repositorio = remember { UsuarioRepositorio(database.usuarioDao()) }
+    val viewModel: UsuarioViewModel = viewModel(factory = UsuarioViewModelFactory(repositorio))
+    
     var usuarioInput by remember { mutableStateOf("") }
     var contrasenaIput by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -100,10 +116,39 @@ fun InicioSesion(
             visualTransformation = PasswordVisualTransformation() // para convertir la contraseña a puntitos
         )
         Spacer(modifier = Modifier.height(30.dp))
+        
+        // Mostrar mensaje de error si existe
+        if (errorMessage.isNotEmpty()) {
+            androidx.compose.material3.Text(
+                text = errorMessage,
+                color = RojoAlerta,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        }
+        
         BotonPrimario(texto = "Iniciar Sesion", onClick = {
-            // Lógica de autenticación básica - se mejorará con base de datos
-            if (usuarioInput == "admin" && contrasenaIput == "admin123") {
-                onLoginSuccess()
+            if (usuarioInput.isBlank() || contrasenaIput.isBlank()) {
+                errorMessage = "Por favor ingrese usuario y contraseña"
+                return@BotonPrimario
+            }
+            
+            scope.launch {
+                try {
+                    // Primero verificar si el usuario admin existe, si no, crearlo
+                    val adminExists = repositorio.adminExists()
+                    if (!adminExists) {
+                        repositorio.createAdminUser()
+                    }
+                    
+                    val usuario = repositorio.login(usuarioInput, contrasenaIput)
+                    if (usuario != null) {
+                        onLoginSuccess()
+                    } else {
+                        errorMessage = "Usuario o contraseña incorrectos"
+                    }
+                } catch (e: Exception) {
+                    errorMessage = "Error al iniciar sesión: ${e.message}"
+                }
             }
         })
         Spacer(modifier = Modifier.height(30.dp))

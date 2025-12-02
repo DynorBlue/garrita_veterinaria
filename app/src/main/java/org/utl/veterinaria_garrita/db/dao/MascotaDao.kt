@@ -13,6 +13,9 @@ import org.utl.veterinaria_garrita.db.model.Mascota
 interface MascotaDao {
 
 
+    @Query("SELECT * FROM mascota")
+    fun getAllMascotas(): Flow<List<Mascota>>
+
     @Query("SELECT * FROM mascota WHERE clienteId = :idCliente ")
     fun getMascotaByCliente(idCliente: Long): Flow<List<Mascota>>
 

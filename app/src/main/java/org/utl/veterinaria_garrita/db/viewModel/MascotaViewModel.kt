@@ -18,6 +18,11 @@ class MascotaViewModel (val repositorio: MascotaRepositorio): ViewModel(){
     private val _clienteId = mutableStateOf<Long?>(null)
     val clienteId: Long? get() = _clienteId.value
 
+    val mascotas = repositorio.allMascotas.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun getMascotasByCliente(idCliente: Long): StateFlow<List<Mascota>>{
         _clienteId.value = idCliente

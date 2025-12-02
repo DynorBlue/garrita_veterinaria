@@ -17,14 +17,22 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
+import org.utl.veterinaria_garrita.db.data.AppDataBase
+import org.utl.veterinaria_garrita.db.repositorio.CitaRepositorio
+import org.utl.veterinaria_garrita.db.viewModel.CitaViewModel
+import org.utl.veterinaria_garrita.db.viewModel.CitaViewModelFactory
 import org.utl.veterinaria_garrita.db.model.Cita
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonEditar
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonEliminar
@@ -41,12 +49,18 @@ fun CitasScreen(
     currentScreen: String,
     onNavigate: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val database = AppDataBase.getDataBase(context)
+    val repositorio = remember { CitaRepositorio(database.citaDao()) }
+    val viewModel: CitaViewModel = viewModel(factory = CitaViewModelFactory(repositorio))
+    
     var showAgregarDialog by remember { mutableStateOf(false) }
     var showEditarDialog by remember { mutableStateOf(false) }
     var citaSeleccionada by remember { mutableStateOf<Cita?>(null) }
     
-    // Lista vacía de citas - se conectará a la base de datos
-    val citas = emptyList<Cita>()
+    val citas by viewModel.citas.collectAsState(initial = emptyList())
+    val uiState by viewModel.uiState
+    val scope = rememberCoroutineScope()
 
     EstructuraPrincipalPantallas(
         title = "Citas",
@@ -111,7 +125,11 @@ fun CitasScreen(
                                     )
                                     BotonEliminar(
                                         texto = "Eliminar",
-                                        onClick = { /* Lógica para eliminar */ },
+                                        onClick = { 
+                                            scope.launch {
+                                                viewModel.eliminarCita(cita)
+                                            }
+                                        },
                                         modifier = Modifier.weight(1f)
                                     )
         }
@@ -130,7 +148,9 @@ fun CitasScreen(
         AgregarCitaDialog(
             onDismiss = { showAgregarDialog = false },
             onConfirm = { fecha, mascotaId, usuarioId ->
-                // Lógica para agregar cita
+                scope.launch {
+                    viewModel.agregarCitas(fecha, mascotaId, usuarioId)
+                }
                 showAgregarDialog = false
             }
         )
@@ -145,10 +165,39 @@ fun CitasScreen(
                 citaSeleccionada = null
             },
             onConfirm = { citaActualizada ->
-                // Lógica para actualizar cita
+                scope.launch {
+                    viewModel.actualizarCita(citaActualizada)
+                }
                 showEditarDialog = false
                 citaSeleccionada = null
             }
         )
+    }
+    
+    // Mostrar mensajes de estado
+    uiState.mensaje?.let { mensaje ->
+        androidx.compose.material3.Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                androidx.compose.material3.TextButton(onClick = { viewModel.limpiarMensaje() }) {
+                    androidx.compose.material3.Text("OK")
+                }
+            }
+        ) {
+            androidx.compose.material3.Text(mensaje)
+        }
+    }
+    
+    uiState.error?.let { error ->
+        androidx.compose.material3.Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                androidx.compose.material3.TextButton(onClick = { viewModel.limpiarMensaje() }) {
+                    androidx.compose.material3.Text("OK")
+                }
+            }
+        ) {
+            androidx.compose.material3.Text(error)
+        }
     }
 }

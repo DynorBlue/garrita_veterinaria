@@ -14,7 +14,7 @@ interface UsuarioDao{
 
     //inicio de sesion
     @Query("SELECT * FROM usuario WHERE nombreUsuario = :nombreUsuario AND contrasena = :contrasenaUsuario LIMIT 1")
-    suspend fun login(nombreUsuario: String, contrasenaUsuario: String): Usuario
+    suspend fun login(nombreUsuario: String, contrasenaUsuario: String): Usuario?
 
     @Query("SELECT * FROM usuario")
     fun getAllUsuarios(): Flow<List<Usuario>>
@@ -27,4 +27,7 @@ interface UsuarioDao{
 
     @Update
     suspend fun actualizarUsuario(usuario: Usuario)
+    
+    @Query("SELECT COUNT(*) FROM usuario WHERE nombreUsuario = 'admin'")
+    suspend fun adminExists(): Int
 }

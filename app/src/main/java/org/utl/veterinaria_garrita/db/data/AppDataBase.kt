@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.utl.veterinaria_garrita.db.dao.CitaDao
 import org.utl.veterinaria_garrita.db.dao.ClienteDao
 import org.utl.veterinaria_garrita.db.dao.InventarioDao
@@ -51,6 +52,27 @@ abstract class AppDataBase : RoomDatabase(){
                 ).addCallback(DatabaseCallback())
                 .build()
                 INSTANCE = instance
+                
+                // Verificar y crear usuario admin si no existe
+                runBlocking {
+                    try {
+                        val usuarioDao = instance.usuarioDao()
+                        val adminCount = usuarioDao.adminExists()
+                        if (adminCount == 0) {
+                            val adminUser = org.utl.veterinaria_garrita.db.model.Usuario(
+                                nombreUsuario = "admin",
+                                contrasena = "admin123",
+                                edad = 30,
+                                genero = 'H',
+                                rol = org.utl.veterinaria_garrita.db.model.Rol.ADMIN
+                            )
+                            usuarioDao.insertUsuario(adminUser)
+                        }
+                    } catch (e: Exception) {
+                        // Manejar error si ya existe
+                    }
+                }
+                
                 return instance
             }
         }
@@ -58,6 +80,17 @@ abstract class AppDataBase : RoomDatabase(){
         private class DatabaseCallback : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                // Insertar usuario admin por defecto
+                db.execSQL(
+                    "INSERT INTO usuario (nombreUsuario, contrasena, edad, genero, rol) VALUES " +
+                    "('admin', 'admin123', 30, 'H', 'ADMIN')"
+                )
+            }
+            
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+                // Verificar y crear usuario admin si no existe (para bases de datos existentes)
+                // Esta es una solución alternativa si la base de datos ya existe
             }
         }
     }

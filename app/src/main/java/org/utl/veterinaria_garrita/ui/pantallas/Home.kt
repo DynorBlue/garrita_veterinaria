@@ -17,16 +17,28 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import org.utl.veterinaria_garrita.db.data.AppDataBase
+import org.utl.veterinaria_garrita.db.repositorio.CitaRepositorio
+import org.utl.veterinaria_garrita.db.repositorio.ClienteRepositorio
+import org.utl.veterinaria_garrita.db.repositorio.MascotaRepositorio
+import org.utl.veterinaria_garrita.db.repositorio.UsuarioRepositorio
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.compose.ui.unit.sp
 import org.utl.veterinaria_garrita.ui.theme.AzulClaro
 import org.utl.veterinaria_garrita.ui.theme.BlancoHumo
@@ -36,6 +48,27 @@ fun Home(
     currentScreen: String,
     onNavigate: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val database = AppDataBase.getDataBase(context)
+    
+    // Crear repositorios
+    val usuarioRepositorio = remember { UsuarioRepositorio(database.usuarioDao()) }
+    val clienteRepositorio = remember { ClienteRepositorio(database.clienteDao()) }
+    val mascotaRepositorio = remember { MascotaRepositorio(database.mascotaDao()) }
+    val citaRepositorio = remember { CitaRepositorio(database.citaDao()) }
+    
+    // Obtener datos de la base de datos
+    val usuarios by usuarioRepositorio.allUsuarios.collectAsState(initial = emptyList())
+    val clientes by clienteRepositorio.allClientes.collectAsState(initial = emptyList())
+    val mascotas by mascotaRepositorio.allMascotas.collectAsState(initial = emptyList())
+    val citas by citaRepositorio.allCitas.collectAsState(initial = emptyList())
+    
+    // Calcular citas de hoy
+    val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    val citasHoy = citas.filter { cita ->
+        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cita.fecha) == today
+    }
+    
     EstructuraPrincipalPantallas(
         title = "Veterinaria Garrita",
         currentScreen = currentScreen,
@@ -78,12 +111,12 @@ fun Home(
                 ) {
                     StatCard(
                         title = "Usuarios",
-                        value = "12",
+                        value = usuarios.size.toString(),
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = "Clientes",
-                        value = "45",
+                        value = clientes.size.toString(),
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -94,12 +127,12 @@ fun Home(
                 ) {
                     StatCard(
                         title = "Mascotas",
-                        value = "67",
+                        value = mascotas.size.toString(),
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = "Citas Hoy",
-                        value = "8",
+                        value = citasHoy.size.toString(),
                         modifier = Modifier.weight(1f)
                     )
                 }

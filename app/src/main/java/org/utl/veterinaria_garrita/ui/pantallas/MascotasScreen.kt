@@ -17,14 +17,22 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
+import org.utl.veterinaria_garrita.db.data.AppDataBase
+import org.utl.veterinaria_garrita.db.repositorio.MascotaRepositorio
+import org.utl.veterinaria_garrita.db.viewModel.MascotaViewModel
+import org.utl.veterinaria_garrita.db.viewModel.MascotaViewModelFactory
 import org.utl.veterinaria_garrita.db.model.Mascota
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonEditar
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonEliminar
@@ -38,12 +46,18 @@ fun MascotasScreen(
     currentScreen: String,
     onNavigate: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val database = AppDataBase.getDataBase(context)
+    val repositorio = remember { MascotaRepositorio(database.mascotaDao()) }
+    val viewModel: MascotaViewModel = viewModel(factory = MascotaViewModelFactory(repositorio))
+    
     var showAgregarDialog by remember { mutableStateOf(false) }
     var showEditarDialog by remember { mutableStateOf(false) }
     var mascotaSeleccionada by remember { mutableStateOf<Mascota?>(null) }
     
-    // Lista vacía de mascotas - se conectará a la base de datos
-    val mascotas = emptyList<Mascota>()
+    val mascotas by viewModel.mascotas.collectAsState(initial = emptyList())
+    val uiState by viewModel.uiState
+    val scope = rememberCoroutineScope()
 
     EstructuraPrincipalPantallas(
         title = "Mascotas",
@@ -108,7 +122,11 @@ fun MascotasScreen(
                                     )
                                     BotonEliminar(
                                         texto = "Eliminar",
-                                        onClick = { /* Lógica para eliminar */ },
+                                        onClick = { 
+                                            scope.launch {
+                                                viewModel.eliminarMascota(mascota)
+                                            }
+                                        },
                                         modifier = Modifier.weight(1f)
                                     )
         }
@@ -127,7 +145,9 @@ fun MascotasScreen(
         AgregarMascotaDialog(
             onDismiss = { showAgregarDialog = false },
             onConfirm = { nombreMascota, raza, edad, peso, clienteId ->
-                // Lógica para agregar mascota
+                scope.launch {
+                    viewModel.agregarMascota(clienteId, nombreMascota, raza, edad, peso)
+                }
                 showAgregarDialog = false
             }
         )
@@ -142,10 +162,39 @@ fun MascotasScreen(
                 mascotaSeleccionada = null
             },
             onConfirm = { mascotaActualizada ->
-                // Lógica para actualizar mascota
+                scope.launch {
+                    viewModel.actualizarMascota(mascotaActualizada)
+                }
                 showEditarDialog = false
                 mascotaSeleccionada = null
             }
         )
+    }
+    
+    // Mostrar mensajes de estado
+    uiState.mensaje?.let { mensaje ->
+        androidx.compose.material3.Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                androidx.compose.material3.TextButton(onClick = { viewModel.limpiarMensaje() }) {
+                    androidx.compose.material3.Text("OK")
+                }
+            }
+        ) {
+            androidx.compose.material3.Text(mensaje)
+        }
+    }
+    
+    uiState.error?.let { error ->
+        androidx.compose.material3.Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                androidx.compose.material3.TextButton(onClick = { viewModel.limpiarMensaje() }) {
+                    androidx.compose.material3.Text("OK")
+                }
+            }
+        ) {
+            androidx.compose.material3.Text(error)
+        }
     }
 }
