@@ -8,6 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import org.utl.veterinaria_garrita.ui.pantallas.CitasScreen
 import org.utl.veterinaria_garrita.ui.pantallas.ClientesScreen
 import org.utl.veterinaria_garrita.ui.pantallas.Home
+import org.utl.veterinaria_garrita.ui.pantallas.InicioSesion
+import org.utl.veterinaria_garrita.ui.pantallas.InventarioScreen
 import org.utl.veterinaria_garrita.ui.pantallas.MascotasScreen
 import org.utl.veterinaria_garrita.ui.pantallas.UsuariosScreen
 
@@ -17,8 +19,18 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "login"
     ) {
+        composable("login") {
+            InicioSesion(
+                onLoginSuccess = {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            )
+        }
+        
         composable("home") {
             Home(
                 currentScreen = "home",
@@ -58,6 +70,15 @@ fun AppNavigation(
         composable("citas") {
             CitasScreen(
                 currentScreen = "citas",
+                onNavigate = { destination ->
+                    navController.navigate(destination)
+                }
+            )
+        }
+        
+        composable("inventario") {
+            InventarioScreen(
+                currentScreen = "inventario",
                 onNavigate = { destination ->
                     navController.navigate(destination)
                 }

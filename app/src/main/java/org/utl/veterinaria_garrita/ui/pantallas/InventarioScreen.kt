@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -47,8 +48,11 @@ import org.utl.veterinaria_garrita.ui.theme.VerdeAlerta
 
 @Composable
 fun InventarioScreen(
-    database: AppDataBase
+    currentScreen: String,
+    onNavigate: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val database = AppDataBase.getDataBase(context)
     val repositorio = remember { InventarioRepositorio(database.inventarioDao()) }
     val viewModel: InventarioViewModel = viewModel(factory = InventarioViewModelFactory(repositorio))
     
@@ -68,7 +72,11 @@ fun InventarioScreen(
         }
     }
 
-    EstructuraPrincipalPantallas(title = "Inventario") { paddingValues ->
+    EstructuraPrincipalPantallas(
+        title = "Inventario",
+        currentScreen = currentScreen,
+        onNavigate = onNavigate
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

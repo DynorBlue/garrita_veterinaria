@@ -45,46 +45,8 @@ fun CitasScreen(
     var showEditarDialog by remember { mutableStateOf(false) }
     var citaSeleccionada by remember { mutableStateOf<Cita?>(null) }
     
-    // Datos de prueba
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    val citasMock = listOf(
-        Cita(
-            idCita = 1,
-            fecha = dateFormat.parse("25/12/2024 10:00") ?: Date(),
-            mascotaId = 1,
-            usuarioId = 2
-        ),
-        Cita(
-            idCita = 2,
-            fecha = dateFormat.parse("25/12/2024 11:30") ?: Date(),
-            mascotaId = 2,
-            usuarioId = 2
-        ),
-        Cita(
-            idCita = 3,
-            fecha = dateFormat.parse("25/12/2024 14:00") ?: Date(),
-            mascotaId = 3,
-            usuarioId = 4
-        ),
-        Cita(
-            idCita = 4,
-            fecha = dateFormat.parse("26/12/2024 09:00") ?: Date(),
-            mascotaId = 4,
-            usuarioId = 2
-        ),
-        Cita(
-            idCita = 5,
-            fecha = dateFormat.parse("26/12/2024 10:30") ?: Date(),
-            mascotaId = 5,
-            usuarioId = 4
-        ),
-        Cita(
-            idCita = 6,
-            fecha = dateFormat.parse("26/12/2024 15:00") ?: Date(),
-            mascotaId = 6,
-            usuarioId = 2
-        )
-    )
+    // Lista vacía de citas - se conectará a la base de datos
+    val citas = emptyList<Cita>()
 
     EstructuraPrincipalPantallas(
         title = "Citas",
@@ -112,7 +74,7 @@ fun CitasScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(citasMock) { cita ->
+                    items(citas) { cita ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(

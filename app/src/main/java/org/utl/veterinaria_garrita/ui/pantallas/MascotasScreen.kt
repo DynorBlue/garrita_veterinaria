@@ -42,57 +42,8 @@ fun MascotasScreen(
     var showEditarDialog by remember { mutableStateOf(false) }
     var mascotaSeleccionada by remember { mutableStateOf<Mascota?>(null) }
     
-    // Datos de prueba
-    val mascotasMock = listOf(
-        Mascota(
-            idMascota = 1,
-            nombreMascota = "Firulais",
-            raza = "Labrador",
-            edad = 3,
-            peso = 25.5,
-            clienteId = 1
-        ),
-        Mascota(
-            idMascota = 2,
-            nombreMascota = "Michi",
-            raza = "Siames",
-            edad = 2,
-            peso = 4.2,
-            clienteId = 2
-        ),
-        Mascota(
-            idMascota = 3,
-            nombreMascota = "Rex",
-            raza = "Pastor Alemán",
-            edad = 5,
-            peso = 32.0,
-            clienteId = 3
-        ),
-        Mascota(
-            idMascota = 4,
-            nombreMascota = "Luna",
-            raza = "Golden Retriever",
-            edad = 4,
-            peso = 28.5,
-            clienteId = 4
-        ),
-        Mascota(
-            idMascota = 5,
-            nombreMascota = "Pelusa",
-            raza = "Persa",
-            edad = 1,
-            peso = 3.8,
-            clienteId = 5
-        ),
-        Mascota(
-            idMascota = 6,
-            nombreMascota = "Max",
-            raza = "Bulldog",
-            edad = 6,
-            peso = 22.0,
-            clienteId = 1
-        )
-    )
+    // Lista vacía de mascotas - se conectará a la base de datos
+    val mascotas = emptyList<Mascota>()
 
     EstructuraPrincipalPantallas(
         title = "Mascotas",
@@ -120,7 +71,7 @@ fun MascotasScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(mascotasMock) { mascota ->
+                    items(mascotas) { mascota ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(

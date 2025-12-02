@@ -105,45 +105,6 @@ fun Home(
                 }
                 
                 Spacer(modifier = Modifier.height(32.dp))
-                
-                // Accesos rápidos
-                Text(
-                    text = "Accesos Rápidos",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickAccessCard(
-                        title = "Usuarios",
-                        onClick = { onNavigate("usuarios") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    QuickAccessCard(
-                        title = "Clientes",
-                        onClick = { onNavigate("clientes") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickAccessCard(
-                        title = "Mascotas",
-                        onClick = { onNavigate("mascotas") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    QuickAccessCard(
-                        title = "Citas",
-                        onClick = { onNavigate("citas") },
-                        modifier = Modifier.weight(1f)
-                    )
-        }
     }
 }
 
@@ -181,35 +142,6 @@ fun StatCard(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-    }
-}
-
-@Composable
-fun QuickAccessCard(
-    title: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = BlancoHumo
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
             )
         }
     }

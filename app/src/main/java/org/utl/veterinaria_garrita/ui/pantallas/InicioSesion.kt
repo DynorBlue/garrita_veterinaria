@@ -38,7 +38,9 @@ import org.utl.veterinaria_garrita.ui.theme.Gris
 import org.utl.veterinaria_garrita.ui.theme.Negro
 
 @Composable
-fun InicioSesion() {
+fun InicioSesion(
+    onLoginSuccess: () -> Unit = {}
+) {
 //variables para los textfield
     var usuarioInput by remember { mutableStateOf("") }
     var contrasenaIput by remember { mutableStateOf("") }
@@ -98,7 +100,12 @@ fun InicioSesion() {
             visualTransformation = PasswordVisualTransformation() // para convertir la contraseña a puntitos
         )
         Spacer(modifier = Modifier.height(30.dp))
-        BotonPrimario(texto = "Iniciar Sesion", onClick = {})
+        BotonPrimario(texto = "Iniciar Sesion", onClick = {
+            // Lógica de autenticación básica - se mejorará con base de datos
+            if (usuarioInput == "admin" && contrasenaIput == "admin123") {
+                onLoginSuccess()
+            }
+        })
         Spacer(modifier = Modifier.height(30.dp))
         //imagen
         Image(

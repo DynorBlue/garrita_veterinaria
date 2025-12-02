@@ -1,5 +1,6 @@
 package org.utl.veterinaria_garrita.ui.pantallas
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,8 +28,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import org.utl.veterinaria_garrita.ui.theme.AzulFuerte
+import org.utl.veterinaria_garrita.ui.theme.Blanco
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,12 +51,14 @@ fun EstructuraPrincipalPantallas(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(AzulFuerte)
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Veterinaria Garrita",
                     style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
+                    color = Blanco,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
                 
@@ -101,6 +108,16 @@ fun EstructuraPrincipalPantallas(
                     selected = currentScreen == "citas",
                     onClick = {
                         onNavigate("citas")
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                
+                NavigationDrawerItem(
+                    label = { Text("Inventario") },
+                    icon = { Icon(Icons.Default.Inventory, contentDescription = "Inventario") },
+                    selected = currentScreen == "inventario",
+                    onClick = {
+                        onNavigate("inventario")
                         scope.launch { drawerState.close() }
                     }
                 )

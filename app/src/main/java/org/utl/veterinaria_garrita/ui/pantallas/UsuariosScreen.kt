@@ -44,41 +44,8 @@ fun UsuariosScreen(
     var showEditarDialog by remember { mutableStateOf(false) }
     var usuarioSeleccionado by remember { mutableStateOf<Usuario?>(null) }
     
-    // Datos de prueba
-    val usuariosMock = listOf(
-        Usuario(
-            idUsuario = 1,
-            nombreUsuario = "Juan Pérez",
-            contrasena = "123456",
-            edad = 30,
-            genero = 'H',
-            rol = Rol.ADMIN
-        ),
-        Usuario(
-            idUsuario = 2,
-            nombreUsuario = "María García",
-            contrasena = "123456",
-            edad = 28,
-            genero = 'M',
-            rol = Rol.VETERINARIO
-        ),
-        Usuario(
-            idUsuario = 3,
-            nombreUsuario = "Carlos López",
-            contrasena = "123456",
-            edad = 25,
-            genero = 'H',
-            rol = Rol.ASISTENTE
-        ),
-        Usuario(
-            idUsuario = 4,
-            nombreUsuario = "Ana Martínez",
-            contrasena = "123456",
-            edad = 32,
-            genero = 'M',
-            rol = Rol.VETERINARIO
-        )
-    )
+    // Lista vacía de usuarios - se conectará a la base de datos
+    val usuarios = emptyList<Usuario>()
 
     EstructuraPrincipalPantallas(
         title = "Usuarios",
@@ -106,7 +73,7 @@ fun UsuariosScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(usuariosMock) { usuario ->
+                    items(usuarios) { usuario ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(

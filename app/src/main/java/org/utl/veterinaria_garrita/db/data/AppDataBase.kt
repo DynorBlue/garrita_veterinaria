@@ -5,6 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.utl.veterinaria_garrita.db.dao.CitaDao
 import org.utl.veterinaria_garrita.db.dao.ClienteDao
 import org.utl.veterinaria_garrita.db.dao.InventarioDao
@@ -14,6 +18,7 @@ import org.utl.veterinaria_garrita.db.model.Cita
 import org.utl.veterinaria_garrita.db.model.Cliente
 import org.utl.veterinaria_garrita.db.model.Inventario
 import org.utl.veterinaria_garrita.db.model.Mascota
+import org.utl.veterinaria_garrita.db.model.Rol
 import org.utl.veterinaria_garrita.db.model.Usuario
 
 @Database(
@@ -43,9 +48,16 @@ abstract class AppDataBase : RoomDatabase(){
                     context.applicationContext,
                     AppDataBase::class.java,
                     "garrita_dataBase"
-                ).build()
+                ).addCallback(DatabaseCallback())
+                .build()
                 INSTANCE = instance
                 return instance
+            }
+        }
+        
+        private class DatabaseCallback : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
             }
         }
     }

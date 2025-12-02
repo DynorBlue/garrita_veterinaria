@@ -42,34 +42,8 @@ fun ClientesScreen(
     var showEditarDialog by remember { mutableStateOf(false) }
     var clienteSeleccionado by remember { mutableStateOf<Cliente?>(null) }
     
-    // Datos de prueba
-    val clientesMock = listOf(
-        Cliente(
-            idCliente = 1,
-            nombreCompleto = "Roberto Sánchez",
-            usuarioId = 1
-        ),
-        Cliente(
-            idCliente = 2,
-            nombreCompleto = "Laura Fernández",
-            usuarioId = 2
-        ),
-        Cliente(
-            idCliente = 3,
-            nombreCompleto = "Miguel Ángel Torres",
-            usuarioId = 3
-        ),
-        Cliente(
-            idCliente = 4,
-            nombreCompleto = "Carmen Rodríguez",
-            usuarioId = 4
-        ),
-        Cliente(
-            idCliente = 5,
-            nombreCompleto = "Diego Herrera",
-            usuarioId = 1
-        )
-    )
+    // Lista vacía de clientes - se conectará a la base de datos
+    val clientes = emptyList<Cliente>()
 
     EstructuraPrincipalPantallas(
         title = "Clientes",
@@ -97,7 +71,7 @@ fun ClientesScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(clientesMock) { cliente ->
+                    items(clientes) { cliente ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
