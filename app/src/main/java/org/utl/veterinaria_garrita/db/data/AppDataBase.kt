@@ -7,16 +7,18 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import org.utl.veterinaria_garrita.db.dao.CitaDao
 import org.utl.veterinaria_garrita.db.dao.ClienteDao
+import org.utl.veterinaria_garrita.db.dao.InventarioDao
 import org.utl.veterinaria_garrita.db.dao.MascotaDao
 import org.utl.veterinaria_garrita.db.dao.UsuarioDao
 import org.utl.veterinaria_garrita.db.model.Cita
 import org.utl.veterinaria_garrita.db.model.Cliente
+import org.utl.veterinaria_garrita.db.model.Inventario
 import org.utl.veterinaria_garrita.db.model.Mascota
 import org.utl.veterinaria_garrita.db.model.Usuario
 
 @Database(
-    entities = [Usuario::class, Cliente::class, Mascota::class, Cita::class],
-    version = 1,
+    entities = [Usuario::class, Cliente::class, Mascota::class, Cita::class, Inventario::class],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(ConvertidorFecha::class, ConvertidorRol::class)
@@ -27,6 +29,8 @@ abstract class AppDataBase : RoomDatabase(){
     abstract fun mascotaDao(): MascotaDao
 
     abstract fun citaDao(): CitaDao
+
+    abstract fun inventarioDao(): InventarioDao
 
     companion object{
 
