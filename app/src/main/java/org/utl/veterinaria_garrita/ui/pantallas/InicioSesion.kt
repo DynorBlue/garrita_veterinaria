@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.utl.veterinaria_garrita.R
 import org.utl.veterinaria_garrita.ui.componentes.buttons.BotonPrimario
-import org.utl.veterinaria_garrita.ui.theme.AzulClaro
 import org.utl.veterinaria_garrita.ui.theme.AzulFuerte
 import org.utl.veterinaria_garrita.ui.theme.Blanco
 import org.utl.veterinaria_garrita.ui.theme.Gris
